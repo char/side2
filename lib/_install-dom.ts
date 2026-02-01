@@ -1,8 +1,11 @@
-import * as dom from "@b-fuze/deno-dom";
+import * as linkedom from "linkedom";
 
-for (const [k, v] of Object.entries(dom)) {
+for (const [k, v] of Object.entries(linkedom)) {
+  if (["parseHTML", "parseJSON", "toJSON"].includes(k)) continue;
   Reflect.defineProperty(globalThis, k, { value: v });
 }
 
-const document = new dom.Document();
-Reflect.defineProperty(globalThis, "document", { value: document });
+const dom = linkedom.parseHTML("<!doctype html>");
+for (const [k, v] of Object.entries(dom)) {
+  Reflect.defineProperty(globalThis, k, { value: v });
+}

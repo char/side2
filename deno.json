@@ -4,11 +4,11 @@
     ".": "./lib/mod.ts"
   },
   "imports": {
-    "@b-fuze/deno-dom": "jsr:@b-fuze/deno-dom@^0.1.56",
     "@char/aftercare": "jsr:@char/aftercare@^0.5.8",
     "@std/assert": "jsr:@std/assert@^1.0.18",
     "@std/fs": "jsr:@std/fs@^1.0.22",
-    "@std/path": "jsr:@std/path@^1.1.4"
+    "@std/path": "jsr:@std/path@^1.1.4",
+    "linkedom": "npm:linkedom@^0.18.12"
   },
   "compilerOptions": {
     "lib": ["deno.window", "dom"],
