@@ -1,9 +1,12 @@
 import * as path from "@std/path";
 import { renderDocument } from "./render-document.ts";
 
+type Content = string | Document | Uint8Array | ReadableStream<Uint8Array>;
 export class Context {
   source: string;
   destination: string;
+
+  output = new Map<string, Content>();
 
   constructor(opts: { source: string; destination: string }) {
     this.source = opts.source;
@@ -27,21 +30,11 @@ export class Context {
     return doc;
   }
 
-  async writeDocument(name: string, document: Document): Promise<void> {
-    await this.write(name, renderDocument(document));
+  put(name: string, content: Content): void {
+    this.output.set(name, content);
   }
 
-  // TODO: we probably want to split the lifecycle into some kinda
-  // plan-execute situation where jobs' write(..) calls just queue operations
-  // to be executed _after all jobs have run_.
-  //
-  // this means that we can reduce awaits in jobs and also if we encounter an error
-  // in the middle of user build jobs we don't end up partially-building the site.
-  async write(
-    name: string,
-    content: string | Uint8Array | ReadableStream<Uint8Array>,
-    opts: { mkdirs?: boolean } = {},
-  ): Promise<void> {
+  async write(name: string, content: Content, opts: { mkdirs?: boolean } = {}): Promise<void> {
     const { mkdirs = true } = opts;
     if (mkdirs) {
       try {
@@ -55,6 +48,8 @@ export class Context {
     const dest = path.join(this.destination, name);
     if (typeof content === "string") {
       await Deno.writeTextFile(dest, content);
+    } else if (content instanceof Document) {
+      await Deno.writeTextFile(dest, renderDocument(content));
     } else {
       await Deno.writeFile(dest, content);
     }

@@ -1,4 +1,4 @@
-import { collectJobs, Context } from "@char/ssg";
+import { collectJobs, Context } from "@char/side2";
 
 const ctx = new Context({ source: "./src", destination: "./public" });
 
@@ -8,3 +8,9 @@ const jobs = await collectJobs(ctx);
 for (const job of jobs) {
   await job.build(ctx);
 }
+
+const writes = ctx.output.entries().map(([name, content]) => {
+  console.log("[+] " + name);
+  ctx.write(name, content);
+});
+await Promise.all(writes);
