@@ -1,10 +1,10 @@
-import type { Context, Job } from "@char/side2";
+import { createJob } from "@char/side2";
 
-export default {
-  build: async (ctx: Context) => {
-    const document = await ctx.readDocument("index.html");
-    const div = <div dataset={{ hello: "world" }}>hello, world!</div>;
-    document.querySelector("main")!.append(div);
-    ctx.put("index.html", document);
-  },
-} satisfies Job;
+export default createJob({ "index.html": "doc" }, (ctx, inputs) => {
+  const document = inputs["index.html"];
+  ctx.useDocument(document);
+
+  const div = <div dataset={{ hello: "world" }}>hello, world!</div>;
+  document.querySelector("main")!.append(div);
+  ctx.put("index.html", document);
+});

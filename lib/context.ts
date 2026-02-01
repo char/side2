@@ -24,10 +24,13 @@ export class Context {
   async readDocument(name: string): Promise<Document> {
     const text = await this.readText(name);
     const doc = new DOMParser().parseFromString(text, "text/html");
-    // set the current window.document to this doc so that elements
-    // dont have to be document-adopted as much
-    Reflect.defineProperty(globalThis, "document", { value: doc });
     return doc;
+  }
+
+  useDocument(doc: Document): void {
+    // set the current window.document to this doc so that
+    // document.createElement doesnt make nodes that need to be readopted
+    Reflect.defineProperty(globalThis, "document", { value: doc });
   }
 
   put(name: string, content: Content): void {
