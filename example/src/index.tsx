@@ -1,6 +1,6 @@
-import { createJob } from "@char/side2";
+import { job } from "@char/side2";
 
-export default createJob({ "index.html": "doc" }, (ctx, inputs) => {
+export default job({ "index.html": "doc" }, (ctx, inputs) => {
   const document = inputs["index.html"];
   ctx.useDocument(document);
 

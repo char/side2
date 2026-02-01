@@ -34,10 +34,7 @@ export interface Job<I extends JobInputsDecl = JobInputsDecl> {
   build: (ctx: Context, inputs: JobInputs<I>) => Promise<void> | void;
 }
 
-export function createJob<const I extends JobInputsDecl>(
-  inputs: I,
-  build: Job<I>["build"],
-): Job<I> {
+export function job<const I extends JobInputsDecl>(inputs: I, build: Job<I>["build"]): Job<I> {
   return { inputs, build };
 }
 
